@@ -1,18 +1,30 @@
 const User = require('../models/user');
 const getAllUsers =  async (req, res) => 
 {
-    try
-    {
-            const users = await User.findAll({
-                attributes: {exclude :['password']}
-            });
-            res.json(users);
-    }
-    catch(error)
-        {
-            res.json({message:error.message})
-        }
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 3;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await User.findAndCountAll({
+      limit:limit,
+      offset:offset
+    });
+
+    const totalPages = Math.ceil(count / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+
+    return res.json({
+      users: rows,
+      page,
+      nextPage,
+      totalPages
+    });
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
 };
+
 
 const getUserById = async (req, res) => 
 {

@@ -1,15 +1,28 @@
 const Task = require('../models/task');
 const getAllTasks =  async (req, res) => 
 {
-    try
-    {
-            const tasks = await Task.findAll()
-            res.json(tasks);
-    }
-    catch(error)
-        {
-            res.json({message:error.message})
-        }
+    try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 3;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await Task.findAndCountAll({
+      limit:limit,
+      offset:offset
+    });
+
+    const totalPages = Math.ceil(count / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+
+    return res.json({
+      tasks: rows,
+      page,
+      nextPage,
+      totalPages
+    });
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
 };
 const getTaskById = async (req, res) => 
 {
