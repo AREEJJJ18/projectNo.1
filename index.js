@@ -3,6 +3,8 @@ const bodyParser = require ('body-parser');
 const sequelize = require('./connection-db');
 const Task = require('./models/task');
 const User = require('./models/user');
+const { body } = require('express-validator');
+
 
 const {
   getAllTasks,
@@ -66,8 +68,37 @@ app.post('/users', createUser);
 app.patch('/users/:id', updateUser);
 app.delete('/users/:id', deleteUser);
 
-app.post('/signup',SignUpUser);
-app.post('/login',LoginUser);
+app.post('/signup',[
+    body('name')
+      .trim()
+      .notEmpty().withMessage('Name is required')
+      .isString().withMessage('Name must be a string'),
+
+    body('username')
+      .trim()
+      .notEmpty().withMessage('Username is required')
+      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+
+    body('email')
+      .trim()
+      .notEmpty().withMessage('Email is required')
+      .isEmail().withMessage('Must be a valid email'),
+
+    body('password')
+      .notEmpty().withMessage('Password is required')
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+      ],SignUpUser);
+
+app.post('/login',[
+          body('email')
+         .trim()
+         .notEmpty().withMessage('Email is required')
+         .isEmail().withMessage('Must be a valid email'),
+
+         body('password')
+        .notEmpty().withMessage('Password is required')
+        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+        ], LoginUser);
 
 
 const startServer = async () => {

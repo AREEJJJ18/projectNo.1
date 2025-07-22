@@ -1,8 +1,14 @@
+const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 const SignUpUser = async(req,res)=>
 {
+         const errors = validationResult(req);
+         if (!errors.isEmpty())
+           {
+               return res.json({ errors: errors.array() });
+           }
     try
     {
            const {name, username, email, password} = req.body;
@@ -49,7 +55,13 @@ const SignUpUser = async(req,res)=>
     }
 }
 
-const LoginUser = async (req, res) => {
+const LoginUser = async (req, res) => 
+  {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) 
+            {
+                 return res.json({ errors: errors.array() });
+            }
   try {
     const { email, password } = req.body;
 
