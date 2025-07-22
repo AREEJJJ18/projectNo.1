@@ -27,9 +27,31 @@ const {
   LoginUser
 } = require('./controllers/auth');
 
-const port = 5050;
+const port = 7000;
 const app = express();
 app.use(bodyParser.json())
+
+app.use(function (req, res, next)
+{
+    
+    const timestamp = new Date().toISOString();
+    console.log("intercepted request:",req.method, req.url, timestamp);
+    console.log("this is middleware 2")
+    next();
+});
+app.use(function (req, res, next)
+{
+    
+    console.log("this is middleware 3");
+    next();
+});
+
+app.use(function (req, res, next)
+{
+    
+    console.log("this is middleware 4");
+    next();
+});
 
 
 app.get('/tasks', getAllTasks);
