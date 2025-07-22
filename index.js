@@ -27,7 +27,7 @@ const {
   LoginUser
 } = require('./controllers/auth');
 
-const port = 8000;
+const port = 5050;
 const app = express();
 app.use(bodyParser.json())
 

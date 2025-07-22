@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const User = require('../models/user');
 const getAllUsers =  async (req, res) => 
 {
@@ -5,8 +6,16 @@ const getAllUsers =  async (req, res) =>
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const search = req.query.search || '';
 
     const { count, rows } = await User.findAndCountAll({
+       where:
+        {
+        username: {
+          [Op.like]: `%${search}%`
+        }
+       },
+
       limit:limit,
       offset:offset
     });

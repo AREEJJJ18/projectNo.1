@@ -1,12 +1,21 @@
+const { Op } = require("sequelize");
 const Task = require('../models/task');
 const getAllTasks =  async (req, res) => 
 {
     try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 3;
+    const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+     const search = req.query.search || '';
 
     const { count, rows } = await Task.findAndCountAll({
+      where:
+              {
+              task_Name: {
+                [Op.like]: `%${search}%`
+              }
+             },
+      
       limit:limit,
       offset:offset
     });
