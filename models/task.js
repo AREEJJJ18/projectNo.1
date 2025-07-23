@@ -1,5 +1,5 @@
 const { DataTypes,Model } = require('sequelize');
-const sequelize = require('../connection-db');
+const sequelize = require('../config/connection-db');
 class Task extends Model{}
 
   Task.init({

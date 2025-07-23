@@ -1,35 +1,16 @@
+require('dotenv').config();
 const express = require ('express');
 const bodyParser = require ('body-parser');
-const sequelize = require('./connection-db');
+const sequelize = require('./config/connection-db.js');
 const Task = require('./models/task');
 const User = require('./models/user');
-const { body } = require('express-validator');
+const taskRoutes = require('./routes/taskRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
+const authRoutes = require('./routes/authRoutes.js');
 
 
-const {
-  getAllTasks,
-  getTaskById,
-  createTask,
-  updateTask,
-  deleteTask
-} = require('./controllers/task_controller'); 
 
-
-const {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-} = require('./controllers/user_controller');
-
-
-const {
-  SignUpUser,
-  LoginUser
-} = require('./controllers/auth');
-
-const port = 7000;
+const port = process.env.PORT;
 const app = express();
 app.use(bodyParser.json())
 
@@ -56,49 +37,15 @@ app.use(function (req, res, next)
 });
 
 
-app.get('/tasks', getAllTasks);
-app.get('/tasks/:id', getTaskById);
-app.post('/tasks', createTask);
-app.patch('/tasks/:id', updateTask);
-app.delete('/tasks/:id', deleteTask);
 
-app.get('/users', getAllUsers);
-app.get('/users/:id', getUserById);
-app.post('/users', createUser);
-app.patch('/users/:id', updateUser);
-app.delete('/users/:id', deleteUser);
+app.use('/api', taskRoutes);
 
-app.post('/signup',[
-    body('name')
-      .trim()
-      .notEmpty().withMessage('Name is required')
-      .isString().withMessage('Name must be a string'),
+app.use('/api', userRoutes);
 
-    body('username')
-      .trim()
-      .notEmpty().withMessage('Username is required')
-      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+app.use('/api', authRoutes);
 
-    body('email')
-      .trim()
-      .notEmpty().withMessage('Email is required')
-      .isEmail().withMessage('Must be a valid email'),
 
-    body('password')
-      .notEmpty().withMessage('Password is required')
-      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-      ],SignUpUser);
 
-app.post('/login',[
-          body('email')
-         .trim()
-         .notEmpty().withMessage('Email is required')
-         .isEmail().withMessage('Must be a valid email'),
-
-         body('password')
-        .notEmpty().withMessage('Password is required')
-        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-        ], LoginUser);
 
 
 const startServer = async () => {
@@ -113,12 +60,12 @@ const startServer = async () => {
     console.log('User model synced');
 
     app.listen(port, () => {
-      console.log(` Server is running on port:`,port);
+      console.log(`Server is running on port:`,port);
     });
 
   } 
   catch (error) {
-    console.error(' Error:', error.message);
+    console.error('Error:', error.message);
   }
   
 };
