@@ -19,23 +19,14 @@ class Task extends Model{}
     {
         type: DataTypes.INTEGER
     },
-    created_at:
-    {
-        type: DataTypes.DATEONLY
-    },
     deadline:
     {
-        type: DataTypes.DATEONLY
-    },
-    is_deleted:
-    {
-        type:DataTypes.BOOLEAN,
-        defaultValue: false
+        type: DataTypes.DATE
     },
     userId:
     {
-    type: DataTypes.INTEGER,
-    allowNull: false 
+        type: DataTypes.INTEGER,
+        allowNull: false 
     }
     
 
@@ -44,10 +35,11 @@ class Task extends Model{}
        sequelize,
        modelName: 'Task',
        tableName:'tasks',
-       timestamps: false,
+       timestamps: true,
+       paranoid:true,
        defaultScope: 
        {
-         attributes: { exclude: ['is_deleted'] }
+         attributes: { exclude: ['deletedAt'] }
        }
   }
 );
