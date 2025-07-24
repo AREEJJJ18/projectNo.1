@@ -31,6 +31,11 @@ class Task extends Model{}
     {
         type:DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    userId:
+    {
+    type: DataTypes.INTEGER,
+    allowNull: false 
     }
     
 
@@ -44,6 +49,6 @@ class Task extends Model{}
        {
          attributes: { exclude: ['is_deleted'] }
        }
-  },
+  }
 );
 module.exports = Task

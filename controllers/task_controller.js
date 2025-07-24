@@ -1,5 +1,7 @@
 const { Op } = require("sequelize");
 const Task = require('../models/task');
+const User = require('../models/user');
+
 const getAllTasks =  async (req, res) => 
 {
     try {
@@ -11,11 +13,13 @@ const getAllTasks =  async (req, res) =>
     const { count, rows } = await Task.findAndCountAll({
       where:
               {
-              task_Name: {
-                [Op.like]: `%${search}%`
-              }
+                 task_Name: { [Op.like]: `%${search}%` }
+              },
+      include:
+             {
+                 model:User,
+                 attributes:['id', 'name', 'username', 'email']
              },
-      
       limit:limit,
       offset:offset
     });
@@ -62,7 +66,8 @@ const createTask = async(req,res)=>
         task_Name: req.body.task_Name,
         task_status: Math.floor(Math.random() * 3),
         created_at: req.body.created_at,
-        deadline:new Date(new Date(req.body.created_at).setDate(new Date(req.body.created_at).getDate() + 3))
+        deadline:new Date(new Date(req.body.created_at).setDate(new Date(req.body.created_at).getDate() + 3)),
+        userId: req.body.userId
         })
     res.json({message:"task created sucessfully",task});
     }

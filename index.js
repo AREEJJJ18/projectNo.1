@@ -4,10 +4,14 @@ const bodyParser = require ('body-parser');
 const sequelize = require('./config/connection-db.js');
 const Task = require('./models/task');
 const User = require('./models/user');
+
+User.hasMany(Task, { foreignKey: 'userId' });
+Task.belongsTo(User, { foreignKey: 'userId' });
+
 const taskRoutes = require('./routes/taskRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
-
+const { Sequelize } = require('sequelize');
 
 
 const port = process.env.PORT;
@@ -53,11 +57,8 @@ const startServer = async () => {
     await sequelize.authenticate(); 
     console.log('Database connected successfully');
 
-    await Task.sync({ force: false}); 
-    console.log('Task model synced');
-
-     await User.sync({ force: false});
-    console.log('User model synced');
+    await sequelize.sync({ force: false}); 
+    console.log('All models are synced');
 
     app.listen(port, () => {
       console.log(`Server is running on port:`,port);

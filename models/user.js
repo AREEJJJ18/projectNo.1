@@ -44,7 +44,7 @@ class User extends Model{}
        {
          attributes: { exclude: ['password','deleted_at'] }
        }
-  },
+  }
 );
 module.exports = User
 
