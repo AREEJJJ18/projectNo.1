@@ -13,25 +13,31 @@ const getAllUsers =  async (req, res) =>
     const { count, rows } = await User.findAndCountAll({
        where:
         {
-        username: { [Op.like]: `%${search}%`}
-       },
+               username: { [Op.like]: `%${search}%`}
+        },
        include: 
        {
-        model: Task,
-        attributes: ['id', 'task_Name', 'task_status', 'created_at', 'deadline']
+               model: Task,
+               attributes: ['id', 'task_Name', 'task_status', 'createdAt', 'deadline']
       },
-      limit:limit,
-      offset:offset
+               limit:limit,
+               offset:offset
     });
 
     const totalPages = Math.ceil(count / limit);
     const nextPage = page < totalPages ? page + 1 : null;
+    const previousPage = page > 1 ? page - 1 : null;
 
     return res.json({
-      users: rows,
+      data: rows,
+      meta:
+      {
+      totalUsers:count,
       page,
       nextPage,
+      previousPage,
       totalPages
+      }
     });
   } catch (error) {
     return res.json({ message: error.message });
