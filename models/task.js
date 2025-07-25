@@ -1,5 +1,6 @@
 const { DataTypes,Model } = require('sequelize');
 const sequelize = require('../config/connection-db');
+const TASK_STATUS = require('../constants/taskStatus');
 class Task extends Model{}
 
   Task.init({
@@ -17,7 +18,9 @@ class Task extends Model{}
     },
     task_status:
     {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: TASK_STATUS.INCOMPLETE,
+        allowNull: false
     },
     deadline:
     {

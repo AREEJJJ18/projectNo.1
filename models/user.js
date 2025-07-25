@@ -1,6 +1,8 @@
 
 const { DataTypes,Model } = require('sequelize');
 const sequelize = require('../config/connection-db');
+const USER_STATUS = require('../constants/userStatus');
+
 class User extends Model{}
   User.init({
     id:{
@@ -28,7 +30,14 @@ class User extends Model{}
     password:{
       type: DataTypes.STRING,
       allowNull: false
+    },
+    user_status:
+    {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: USER_STATUS.ACTIVE
     }
+
   },
   {
        sequelize,

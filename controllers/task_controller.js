@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const Task = require('../models/task');
 const User = require('../models/user');
+const TASK_STATUS = require('../constants/taskStatus');
 
 const getAllTasks =  async (req, res) => 
 {
@@ -8,13 +9,32 @@ const getAllTasks =  async (req, res) =>
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
-     const search = req.query.search || '';
+    const search = req.query.search || '';
+    const status = req.query.status?.toLowerCase();
+
+     let whereCondition = {
+      task_Name: { [Op.like]: `%${search}%` }
+    };
+
+    if (status !== undefined) 
+      {
+    if (status === 'incomplete')
+      {
+         whereCondition.task_status = TASK_STATUS.INCOMPLETE;
+      } 
+    else if (status === 'pending') 
+      {
+         whereCondition.task_status = TASK_STATUS.PENDING;
+      } 
+    else if (status === 'complete') 
+      {
+         whereCondition.task_status = TASK_STATUS.COMPLETE;
+      }
+      }
+
 
     const { count, rows } = await Task.findAndCountAll({
-      where:
-              {
-                 task_Name: { [Op.like]: `%${search}%` }
-              },
+      where:whereCondition,
       include:
              {
                  model:User,
@@ -70,9 +90,8 @@ const createTask = async(req,res)=>
         const task = await Task.create
         ({
         task_Name: req.body.task_Name,
-        task_status: Math.floor(Math.random() * 3),
-        created_at: req.body.created_at,
-        deadline:new Date(new Date(req.body.created_at).setDate(new Date(req.body.created_at).getDate() + 3)),
+        task_status: req.body.task_status?? TASK_STATUS.INCOMPLETE,
+        deadline:new Date(new Date().setDate(new Date().getDate() + 3)),
         userId: req.body.userId
         })
     res.json({message:"task created sucessfully",task});

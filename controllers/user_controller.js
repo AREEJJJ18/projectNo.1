@@ -1,6 +1,8 @@
+const bcrypt = require('bcrypt');
 const { Op } = require("sequelize");
 const User = require('../models/user');
 const Task = require('../models/task');
+const USER_STATUS = require('../constants/userStatus');
 
 const getAllUsers =  async (req, res) => 
 {
@@ -9,12 +11,25 @@ const getAllUsers =  async (req, res) =>
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
     const search = req.query.search || '';
-
+    const status = req.query.status?.toLowerCase();
+    let whereCondition = 
+    {
+        username: { [Op.like]: `%${search}%` }
+    }
+    
+    if (status !== undefined) 
+      {
+    if (status === 'inactive')
+      {
+         whereCondition.user_status = USER_STATUS.INACTIVE;
+      } 
+    else if (status === 'active') 
+      {
+         whereCondition.user_status = USER_STATUS.ACTIVE;
+      } 
+      }
     const { count, rows } = await User.findAndCountAll({
-       where:
-        {
-               username: { [Op.like]: `%${search}%`}
-        },
+       where: whereCondition,
        include: 
        {
                model: Task,
@@ -42,8 +57,7 @@ const getAllUsers =  async (req, res) =>
   } catch (error) {
     return res.json({ message: error.message });
   }
-};
-
+}
 
 const getUserById = async (req, res) => 
 {
@@ -69,12 +83,14 @@ const createUser = async(req,res)=>
 {
     try
     {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const user = await User.create
         ({
               name: req.body.name,
               username: req.body.username,
               email: req.body.email,
-              password:req.body.password
+              password:hashedPassword,
+              user_status:req.body.user_status?? USER_STATUS.INACTIVE,
         })
     res.json({message:"user created sucessfully",user});
     }
