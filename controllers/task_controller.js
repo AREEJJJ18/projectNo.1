@@ -131,7 +131,7 @@ const deleteTask = async(req, res) =>
         {
         return res.json({ message: 'Task not found' });
         }
-      await task.update({ is_deleted: true })
+      await task.destroy()
           res.json({ message: 'Task deleted successfully' });
      }
     catch(error) 
