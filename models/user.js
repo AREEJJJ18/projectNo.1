@@ -1,7 +1,7 @@
 
 const { DataTypes,Model } = require('sequelize');
 const sequelize = require('../config/connection-db');
-const USER_STATUS = require('../constants/userStatus');
+const USER_STATUS = require('../constants/user_status');
 
 class User extends Model{}
   User.init({

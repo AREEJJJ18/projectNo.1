@@ -1,6 +1,6 @@
 const { DataTypes,Model } = require('sequelize');
 const sequelize = require('../config/connection-db');
-const TASK_STATUS = require('../constants/taskStatus');
+const TASK_STATUS = require('../constants/task_status');
 class Task extends Model{}
 
   Task.init({

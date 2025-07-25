@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const Task = require('../models/task');
 const User = require('../models/user');
-const TASK_STATUS = require('../constants/taskStatus');
+const TASK_STATUS = require('../constants/task_status');
 
 const getAllTasks =  async (req, res) => 
 {

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const { Op } = require("sequelize");
 const User = require('../models/user');
 const Task = require('../models/task');
-const USER_STATUS = require('../constants/userStatus');
+const USER_STATUS = require('../constants/user_status');
 
 const getAllUsers =  async (req, res) => 
 {
