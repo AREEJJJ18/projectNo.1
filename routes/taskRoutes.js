@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { verifyToken } = require('../middlewares/logging');
 const {
   getAllTasks,
   getTaskById,
@@ -8,10 +9,10 @@ const {
   deleteTask
 } = require('../controllers/task_controller'); 
 
-router.get('/tasks', getAllTasks);
-router.get('/tasks/:id', getTaskById);
-router.post('/tasks', createTask);
-router.patch('/tasks/:id', updateTask);
-router.delete('/tasks/:id', deleteTask);
+router.get('/tasks', verifyToken, getAllTasks);
+router.get('/tasks/:id', verifyToken, getTaskById);
+router.post('/tasks', verifyToken, createTask);
+router.patch('/tasks/:id', verifyToken, updateTask);
+router.delete('/tasks/:id', verifyToken, deleteTask);
 
 module.exports = router;
