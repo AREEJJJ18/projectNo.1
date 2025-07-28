@@ -28,7 +28,7 @@ module.exports = {
       user_status: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 1 // ACTIVE by default
+        defaultValue: 1 
       },
       createdAt: {
         allowNull: false,
