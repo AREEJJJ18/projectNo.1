@@ -41,7 +41,7 @@ const SignUpUser = async(req,res)=>
            password:hashedPassword
         })
 
-         const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: "1h" });
+         const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: "1d" });
 
         res.json
         ({
@@ -86,7 +86,7 @@ const LoginUser = async (req, res) =>
       return res.json({ message: "Invalid email or password" });
     }
        
-       const token = jwt.sign({userId: user.id}, secret_key, {expiresIn:"1h"});
+       const token = jwt.sign({userId: user.id}, secret_key, {expiresIn:"1d"});
 
     res.json({
       message: "Login successful",
