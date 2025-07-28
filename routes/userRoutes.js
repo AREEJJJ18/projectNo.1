@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userMiddleware = require('../middlewares/logging');
-const  verifyToken  = require('../middlewares/verifyToken');
+const { verifyToken }  = require('../jwtService');
 
 const {
   getAllUsers,

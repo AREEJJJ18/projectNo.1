@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-require('dotenv').config();
-const secret_key = process.env.JWT_SECRET || 'fallback_secret';
+const { generateToken } = require('../jwtService');
+
 
 const SignUpUser = async(req,res)=>
 {
@@ -41,7 +41,7 @@ const SignUpUser = async(req,res)=>
            password:hashedPassword
         })
 
-         const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: process.env.JWT_EXPIRES_IN || '1h' });
+         const token = generateToken(user);
 
         res.json
         ({
@@ -86,7 +86,7 @@ const LoginUser = async (req, res) =>
       return res.json({ message: "Invalid email or password" });
     }
        
-       const token = jwt.sign({userId: user.id}, secret_key, {expiresIn: process.env.JWT_EXPIRES_IN || '1h'});
+       const token = generateToken(user);
 
     res.json({
       message: "Login successful",
