@@ -5,7 +5,7 @@ const secret_key = process.env.JWT_SECRET || 'fallback_secret';
 
 function generateToken (user)
 {
-    const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: process.env.JWT_EXPIRES_IN || '1h' });
+    const token = jwt.sign({ userId: user.id, role: user.role }, secret_key, { expiresIn: process.env.JWT_EXPIRES_IN || '1h' });
     return token;
 }
 

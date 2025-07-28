@@ -16,8 +16,6 @@ const getAllTasks =  async (req, res) =>
       task_Name: { [Op.like]: `%${search}%` }
     };
 
-    if (status !== undefined) 
-      {
     if (status === 'incomplete')
       {
          whereCondition.task_status = TASK_STATUS.INCOMPLETE;
@@ -30,8 +28,12 @@ const getAllTasks =  async (req, res) =>
       {
          whereCondition.task_status = TASK_STATUS.COMPLETE;
       }
-      }
 
+      
+    if (req.user.role === 'user') 
+      {
+         whereCondition.userId = req.user.id;
+      }
 
     const { count, rows } = await Task.findAndCountAll({
       where:whereCondition,
