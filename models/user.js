@@ -36,7 +36,13 @@ class User extends Model{}
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: USER_STATUS.ACTIVE
-    }
+    },
+    role: 
+    {
+      type: DataTypes.ENUM('user', 'admin'),
+      allowNull: false,
+      defaultValue: 'user'
+}
 
   },
   {
