@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userMiddleware = require('../middlewares/logging');
 const { verifyToken }  = require('../jwtService');
+const { authorizeAdmin } = require('../middlewares/roleBasedAccess');
 
 const {
   getAllUsers,
@@ -13,7 +14,7 @@ const {
 
 
 
-router.get('/users', userMiddleware, verifyToken, getAllUsers);
+router.get('/users', userMiddleware, verifyToken, authorizeAdmin, getAllUsers);
 router.get('/users/:id', userMiddleware, verifyToken, getUserById);
 router.post('/users', userMiddleware, verifyToken, createUser);
 router.patch('/users/:id', userMiddleware, verifyToken, updateUser);
