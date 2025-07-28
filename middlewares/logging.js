@@ -10,24 +10,26 @@ function userMiddleware(req, res, next)
 }
 
 function verifyToken(req, res, next)
-{
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+ {
+    const authHeader = req.headers.authorization;
 
-     if (!token) 
-        {
-            return res.status(401).json({ message: 'Token missing' });
-        }
+    if (!authHeader || !authHeader.startsWith('Bearer '))
+         {
+               return res.status(401).json({ message: 'Token missing or malformed' });
+         }
 
-     jwt.verify(token, secret_key, (err, decoded) => 
-        {
-            if (err) 
-                {
-                      return res.json({ message: 'Invalid or expired token' });
-                }
+    const token = authHeader.split(' ')[1];
 
-    req.user = decoded; 
-         next();
-  });
+    try 
+    {
+        const decoded = jwt.verify(token, secret_key);
+        req.user = decoded;
+        next();
+    }
+    catch (err) 
+    {
+        return res.status(401).json({ message: 'Invalid or expired token' });
+    }
 }
+
 module.exports = { userMiddleware, verifyToken }
