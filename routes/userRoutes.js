@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { userMiddleware, verifyToken } = require('../middlewares/logging');
+const userMiddleware = require('../middlewares/logging');
+const  verifyToken  = require('../middlewares/verifyToken');
 
 const {
   getAllUsers,
