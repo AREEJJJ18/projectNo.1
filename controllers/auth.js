@@ -2,8 +2,8 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { generateToken } = require('../jwtService');
-const errorResponse = require('../errorResponseHandling');
+const { generateToken } = require('../Utilities/jwtService');
+const errorResponse = require('../Utilities/errorResponseHandling');
 
 
 const SignUpUser = async(req,res)=>

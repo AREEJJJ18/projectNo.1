@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken }  = require('../jwtService');
+const { verifyToken }  = require('../Utilities/jwtService');
 const { authorizeAdminOrUser } = require('../middlewares/roleBasedAccess');
 const {
   getAllTasks,

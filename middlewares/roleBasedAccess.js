@@ -1,4 +1,4 @@
-const errorResponse = require('../errorResponseHandling');
+const errorResponse = require('../Utilities/errorResponseHandling');
 
 function authorizeAdmin(req, res, next) 
 {

@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const User = require('../models/user');
 const Task = require('../models/task');
 const USER_STATUS = require('../constants/user_status');
-const errorResponse = require('../errorResponseHandling');
+const errorResponse = require('../Utilities/errorResponseHandling');
 
 const getAllUsers =  async (req, res) => 
 {

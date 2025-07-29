@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userMiddleware = require('../middlewares/logging');
-const { verifyToken }  = require('../jwtService');
+const { verifyToken }  = require('../Utilities/jwtService');
 const { authorizeAdmin } = require('../middlewares/roleBasedAccess');
 
 const {
