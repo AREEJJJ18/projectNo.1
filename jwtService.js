@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret_key = process.env.JWT_SECRET || 'fallback_secret';
+const errorResponse = require('./errorResponseHandling');
 
 
 function generateToken (user)
@@ -15,7 +16,7 @@ function verifyToken(req, res, next)
 
     if (!authHeader || !authHeader.startsWith('Bearer '))
          {
-               return res.status(401).json({ message: 'Token missing or malformed' });
+               return errorResponse(res, 401, 'Token missing or malformed');
          }
 
     const token = authHeader.split(' ')[1];
@@ -28,7 +29,7 @@ function verifyToken(req, res, next)
     }
     catch (err) 
     {
-        return res.status(401).json({ message: 'Invalid or expired token' });
+            return errorResponse(res, 401, 'Invalid or Expired Token');
     }
 }
 

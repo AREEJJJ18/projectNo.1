@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const Task = require('../models/task');
 const User = require('../models/user');
 const TASK_STATUS = require('../constants/task_status');
+const errorResponse = require('../errorResponseHandling');
 
 const getAllTasks =  async (req, res) => 
 {
@@ -50,7 +51,7 @@ const getAllTasks =  async (req, res) =>
     const nextPage = page < totalPages ? page + 1 : null;
     const previousPage = page > 1 ? page - 1 : null;
 
-    return res.json({
+    return res.status(200).json({
       data: rows,
       meta:
       {
@@ -61,8 +62,10 @@ const getAllTasks =  async (req, res) =>
         totalPages
       }
     });
-  } catch (error) {
-    return res.json({ message: error.message });
+  } 
+  catch (error) 
+  {
+      return errorResponse(res, 500, 'An unexpected error occurred while fetching tasks');
   }
 };
 const getTaskById = async (req, res) => 
@@ -73,16 +76,16 @@ const getTaskById = async (req, res) =>
     const task =await  Task.findByPk(Id)
      if(task)
             {
-             return   res.json(task);
+             return   res.status(200).json(task);
             }
     else
             {
-               return res.json({message:"task not found"});
+               return errorResponse(res, 404, 'Task not Found');
             }
      }
         catch(error)
         {
-            res.json({message:error.message});
+            return errorResponse(res, 500, 'An unexpected error occurred while fetching task');
         }
 }
 const createTask = async(req,res)=>
@@ -96,11 +99,11 @@ const createTask = async(req,res)=>
         deadline:new Date(new Date().setDate(new Date().getDate() + 3)),
         userId: req.body.userId
         })
-    res.json({message:"task created sucessfully",task});
+            res.status(201).json({message:"task created sucessfully",task});
     }
     catch(error)
     {
-    res.json({message:error.message});
+           return errorResponse(res, 500, 'An unexpected error occurred while creating the task');
     }
 }
 
@@ -112,14 +115,14 @@ const updateTask = async (req, res) =>
         const task =await Task.findByPk(Id);
             if(!task)
             {
-                return res.json({message:"task not found"});
+                return errorResponse(res, 404, 'Task not Found');
             }
             const updatedTask = await task.update(req.body);
-              res.json({ message: "Task updated successfully", updatedTask});
+              res.status(200).json({ message: "Task updated successfully", updatedTask});
      }
     catch(error)
         {
-            res.json({message:error.message});
+            return errorResponse(res, 500, 'An unexpected error occurred while updating the task');
         }
 }
 
@@ -131,14 +134,14 @@ const deleteTask = async(req, res) =>
          const task = await Task.findByPk(id)
       if (!task)
         {
-        return res.json({ message: 'Task not found' });
+             return errorResponse(res, 404, 'Task not Found');
         }
       await task.destroy()
-          res.json({ message: 'Task deleted successfully' });
+             return errorResponse(res, 200, 'Task deleted successfully');
      }
     catch(error) 
     {
-      res.json({ message: error.message });
+             return errorResponse(res, 500, 'An unexpected error occurred while deleting the task');
     }
 }
 module.exports = {

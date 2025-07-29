@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { generateToken } = require('../jwtService');
+const errorResponse = require('../errorResponseHandling');
 
 
 const SignUpUser = async(req,res)=>
@@ -10,7 +11,7 @@ const SignUpUser = async(req,res)=>
          const errors = validationResult(req);
          if (!errors.isEmpty())
            {
-               return res.json({ errors: errors.array() });
+               return errorResponse(res, 422, errors.array());
            }
     try
     {
@@ -20,15 +21,15 @@ const SignUpUser = async(req,res)=>
 
              if (existingUsername && existingEmail)
                  {
-                        return res.json({ message: "Username and email already in use" });
+                        return errorResponse(res, 409, 'Username and Email already in use');
                  } 
              else if (existingUsername) 
                  {
-                         return res.json({ message: "Username already in use" });
+                        return errorResponse(res, 409, 'Username already in use'); 
                  }
              else if (existingEmail) 
                  {
-                         return res.json({ message: "Email already in use" });
+                         return errorResponse(res, 409, 'Email already in use');
                  }
 
         const saltRounds = 10;
@@ -43,7 +44,7 @@ const SignUpUser = async(req,res)=>
 
          const token = generateToken(user);
 
-        res.json
+        res.status(201).json
         ({
         message: 'User signed up successfully',
         user: 
@@ -58,7 +59,7 @@ const SignUpUser = async(req,res)=>
     }
     catch(error)
     {
-        res.json({message:error.message})
+        return errorResponse(res, 500, 'An unexpected error occurred while SignUp');
     }
 }
 
@@ -67,28 +68,31 @@ const LoginUser = async (req, res) =>
           const errors = validationResult(req);
           if (!errors.isEmpty()) 
             {
-                 return res.json({ errors: errors.array() });
+                 return errorResponse(res, 422, errors.array());
             }
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.json({ message: "Email and password are required" });
-    }
+    if (!email || !password)
+      {
+           return errorResponse(res, 400, 'Email and Password are required');
+      }
 
     const user = await User.unscoped().findOne({ where: { email } })
-    if (!user) {
-      return res.json({ message: "Invalid email or password" });
-    }
+    if (!user)
+      {
+           return errorResponse(res, 401, 'Invalid Email or Password');
+      }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.json({ message: "Invalid email or password" });
-    }
+    if (!isMatch) 
+      {
+          return errorResponse(res, 401, 'Invalid Email or Password');
+      }
        
        const token = generateToken(user);
 
-    res.json({
+    res.status(200).json({
       message: "Login successful",
       user: {
         id: user.id,
@@ -101,7 +105,7 @@ const LoginUser = async (req, res) =>
 
   } catch (error)
    {
-    res.json({ message: error.message });
-  }
+        return errorResponse(res, 500, 'An unexpected error occurred while Login');
+   }
 };
 module.exports = {SignUpUser,LoginUser}
