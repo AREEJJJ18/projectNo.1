@@ -42,7 +42,13 @@ class User extends Model{}
       type: DataTypes.ENUM('user', 'admin'),
       allowNull: false,
       defaultValue: 'user'
-}
+    },
+    profile_picture: 
+    {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
+
 
   },
   {
