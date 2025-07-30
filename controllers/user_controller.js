@@ -5,6 +5,7 @@ const Task = require('../models/task');
 const USER_STATUS = require('../constants/user_status');
 const errorResponse = require('../Utilities/errorResponseHandling');
 
+
 const getAllUsers =  async (req, res) => 
 {
   try {
@@ -139,10 +140,12 @@ const deleteUser = async(req, res) =>
          return errorResponse(res, 500, 'An unexpected error occurred while deleting user'); 
     }
 }
+   
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
-  deleteUser,
+  deleteUser
 };

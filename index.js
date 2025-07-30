@@ -11,12 +11,14 @@ Task.belongsTo(User, { foreignKey: 'userId' });
 const taskRoutes = require('./routes/taskRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
+const profilePicRoutes = require('./routes/profilePicRoutes.js');
+
 const { Sequelize } = require('sequelize');
 
 
 const port = process.env.PORT;
 const app = express();
-app.use(bodyParser.json())
+
 
 app.use(function (req, res, next)
 {
@@ -40,6 +42,10 @@ app.use(function (req, res, next)
     next();
 });
 
+app.use('/api', profilePicRoutes);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/api', taskRoutes);
@@ -47,6 +53,7 @@ app.use('/api', taskRoutes);
 app.use('/api', userRoutes);
 
 app.use('/api', authRoutes);
+
 
 
 
