@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { generateToken } = require('../Utilities/jwtService');
 const errorResponse = require('../Utilities/errorResponseHandling');
+const user_status = require('../constants/user_status');
 
 
 const SignUpUser = async(req,res)=>
@@ -15,7 +16,7 @@ const SignUpUser = async(req,res)=>
            }
     try
     {
-           const {name, username, email, password} = req.body;
+           const {name, username, email, password, user_status, role} = req.body;
            const existingUsername = await User.findOne({ where: { username } });
            const existingEmail = await User.findOne({ where: { email } });
 
@@ -39,7 +40,9 @@ const SignUpUser = async(req,res)=>
            name,
            username,
            email,
-           password:hashedPassword
+           password:hashedPassword,
+           user_status,
+           role: role || 'user'
         })
 
          const token = generateToken(user);

@@ -94,6 +94,7 @@ const createUser = async(req,res)=>
               email: req.body.email,
               password:hashedPassword,
               user_status:req.body.user_status?? USER_STATUS.INACTIVE,
+              role: req.body.role
         })
     res.status(201).json({message:"user created sucessfully",user});
     }

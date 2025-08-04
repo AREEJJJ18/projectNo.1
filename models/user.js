@@ -47,7 +47,13 @@ class User extends Model{}
     {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    reset_password_hash: 
+    {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
 
 
   },

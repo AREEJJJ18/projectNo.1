@@ -1,4 +1,9 @@
 require('dotenv').config();
+console.log("MJ_API_KEY:", process.env.MJ_API_KEY);
+console.log("MJ_SECRET_KEY:", process.env.MJ_SECRET_KEY);
+console.log("EMAIL_FROM:", process.env.EMAIL_FROM);
+
+
 const express = require ('express');
 const bodyParser = require ('body-parser');
 const sequelize = require('./config/connection-db.js');
@@ -12,6 +17,10 @@ const taskRoutes = require('./routes/taskRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
 const profilePicRoutes = require('./routes/profilePicRoutes.js');
+const emailRoutes = require('./routes/emailRoutes.js');
+const forgotPasswordRoutes = require('./routes/forgotPasswordRoutes.js');
+const resetPasswordRoutes = require('./routes/resetPasswordRoutes.js');
+const updatePasswordRoutes = require('./routes/updatePasswordRoutes.js');
 
 const { Sequelize } = require('sequelize');
 
@@ -47,13 +56,19 @@ app.use('/api', profilePicRoutes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use('/api', taskRoutes);
 
 app.use('/api', userRoutes);
 
 app.use('/api', authRoutes);
 
+app.use('/api', emailRoutes);
+
+app.use('/api', forgotPasswordRoutes);
+
+app.use('/api', resetPasswordRoutes);
+
+app.use('/api', updatePasswordRoutes);
 
 
 
