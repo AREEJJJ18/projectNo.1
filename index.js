@@ -1,7 +1,7 @@
 require('dotenv').config();
 console.log("MJ_API_KEY:", process.env.MJ_API_KEY);
 console.log("MJ_SECRET_KEY:", process.env.MJ_SECRET_KEY);
-console.log("EMAIL_FROM:", process.env.EMAIL_FROM);
+console.log("EMAIL_FROM:", process.env.SENDER);
 
 
 const express = require ('express');
@@ -51,10 +51,10 @@ app.use(function (req, res, next)
     next();
 });
 
-app.use('/api', profilePicRoutes);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/api', profilePicRoutes);
 
 app.use('/api', taskRoutes);
 

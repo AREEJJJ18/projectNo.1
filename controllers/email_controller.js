@@ -1,8 +1,11 @@
 const sendMail = require('../Utilities/mailService');
 const errorResponse = require('../Utilities/errorResponseHandling');
-const sendWelcomeEmail = async (req, res) => {
+const sendWelcomeEmail = async (req, res) => 
+  {
   try {
-    const { to, subject, text, html } = req.body; 
+    console.log("email hit")
+    const { to, subject, text, html } = req.body;
+
     const info = await sendMail({
       to,
       subject,
@@ -16,4 +19,6 @@ const sendWelcomeEmail = async (req, res) => {
         return errorResponse(res, 500, 'An unexpected error occurred while sending email');
   }
 };
+
+
 module.exports = sendWelcomeEmail

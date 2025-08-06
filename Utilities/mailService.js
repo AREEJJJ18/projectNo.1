@@ -1,29 +1,37 @@
 const nodemailer = require('nodemailer');
 const mailjetTransport = require('nodemailer-mailjet-transport');
+require('dotenv').config();
 
- const transporter =
-  process.env.MAIL_PROVIDER === 'mailjet'
-    ? nodemailer.createTransport(mailjetTransport({
-        auth: { apiKey: process.env.MAIL_USER, apiSecret: process.env.MAIL_PASS }
-      }))
-    : nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        auth: { user: process.env.MAIL_USER, pass: process.env.MAIL_PASS }
-      });
+ const transporter = nodemailer.createTransport(
+  mailjetTransport
+       ({
+        auth: 
+              { 
+                 apiKey: process.env.MJ_API_KEY,
+                 apiSecret: process.env.MJ_SECRET_KEY
+               },
+               pool: true,
+               maxConnections: 1,
+               rateLimit: 1
+        }))
+  
 
 async function sendMail ({to, subject, text, html})
 {  
     try
-    {  console.log("Before sendMail");
-      const info = await transporter.sendMail({
-        from: process.env.EMAIL_FROM,
+    {  
+        const info = await Promise.race([
+        transporter.sendMail({
+        from: process.env.SENDER,
         to,
         subject,
-        text,
-        html
-      })
-      console.log("After sendMail");
+        text: text || "",
+        html: html || `<p>${text}</p>`
+      }),
+        new Promise((resolve) => 
+        setTimeout(() => resolve({ message: "Mailjet request sent, no immediate response" }), 8000)
+      )
+    ]);
          return info;
     }
     catch(error)
@@ -31,7 +39,5 @@ async function sendMail ({to, subject, text, html})
         throw error
     }
 }
-
-
 
 module.exports = sendMail
