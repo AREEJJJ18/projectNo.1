@@ -52,6 +52,17 @@ class User extends Model{}
     {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    isVerified:
+    {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    email_verification_hash:
+    {
+      type: DataTypes.STRING,
+      allowNull: true
     }
 
 
